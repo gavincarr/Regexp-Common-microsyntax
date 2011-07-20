@@ -5,7 +5,9 @@ all_from 'lib/Regexp/Common/microsyntax.pm';
 author   q{Gavin Carr <gavin@openfusion.com.au>};
 license  'perl';
 
-build_requires 'Test::More';
+build_requires 'Test::More' >= 0.88;
+
+requires 'Regexp::Common';
 
 auto_install;
 
