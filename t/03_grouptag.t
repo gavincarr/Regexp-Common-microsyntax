@@ -65,7 +65,7 @@ for my $t (@$hashtag_tests) {
   cmp_deeply(\@got2, $t->{expected}, "$t->{description} via \$3");
 
   # Test one-shot (no keep)
-  @got = ($t->{text} =~ m/$RE{microsyntax}{grouptag}/g);
+  @got = $t->{text} =~ m/$RE{microsyntax}{grouptag}/og;
   cmp_deeply(\@got,  [ map { "!$_" } @{$t->{expected}} ],
     "$t->{description} (no keep)");
 

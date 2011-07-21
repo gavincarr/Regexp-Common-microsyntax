@@ -148,14 +148,12 @@ Version 0.01
 
     use Regexp::Common qw(microsyntax);
 
-    # Available patterns: users, hashtag, grouptag
+    # Available patterns: users, hashtag, grouptag, slashtag
 
-    # Get all users mentioned in the given post (@user1 @user2 etc)
-    @users = ($post =~ m/$RE{microsyntax}{user}/g);
-
-    @hashtags = $post =~ m/$RE{microsyntax}{hashtag}/g;
-
-    @groups = $post =~ m/$RE{microsyntax}{grouptag}/g;
+    # Get all users/hashtags/groups mentioned in $post
+    @users    = $post =~ m/$RE{microsyntax}{user}/og;
+    @hashtags = $post =~ m/$RE{microsyntax}{hashtag}/og;
+    @groups   = $post =~ m/$RE{microsyntax}{grouptag}/og;
 
 
 =head1 DESCRIPTION
@@ -171,17 +169,37 @@ B<twitter-text> Regex class, with extensions to support features that
 Twitter doesn't support (like status.net !group tags, microsyntax.org
 slashtags, etc.).
 
+=head2 $RE{microsyntax}{user}
+
+Returns a pattern that matches @username handles. For this pattern and
+the next four, using '-keep' (see L<Regexp::Common>) allows access to
+the following individual components:
+
 =over 4
 
-=item $RE{microsyntax}{user}
+=item $1  captures the entire match
 
-=item $RE{microsyntax}{hashtag}
+=item $2  captures the sigil used ('@' for usernames, '#' or '' for hashtags, etc.)
 
-=item $RE{microsyntax}{grouptag}
+=item $3  captures the text after the sigil i.e. the bare username, hashtag, etc.
 
 =back
 
-=cut
+=head2 $RE{microsyntax}{hashtag}
+
+Returns a pattern that matches #hashtags, with support for unicode hashtags.
+Note that all number hashtags are specifically excluded.
+
+=head2 $RE{microsyntax}{grouptag}
+
+Returns a pattern that matches identica/status.net !group tags.
+
+=head2 $RE{microsyntax}{slashtag}
+
+Returns a pattern that matches slashtags, as defined and documented at
+http://microsyntax.org/.
+
+TODO: not yet implemented.
 
 =head1 AUTHOR
 
@@ -200,7 +218,7 @@ The Ruby C<twitter-text-rb> library, L<http://github.com/mzsanford/twitter-text-
 
 =head1 SEE ALSO
 
-L<Regexp::Common>
+L<Regexp::Common>, L<Text::Microsyntax>
 
 =head1 LICENSE AND COPYRIGHT
 
