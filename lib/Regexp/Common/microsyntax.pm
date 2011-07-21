@@ -14,6 +14,7 @@ my %REGEXEN = ();
 
 my $AT_SIGNS = '@＠';
 my $HASH_SIGNS = '#＃';
+my $EXCLAMATION_SIGNS = '!';
 
 my $UNICODE_SPACES = join '|', map { pack 'U*', $_ }
   0x0009 .. 0x000D, # White_Space # Cc   [5] <control-0009>..<control-000D>
@@ -105,14 +106,27 @@ pattern
             "(?k:$HASHTAG_ALPHANUMERIC*$HASHTAG_ALPHA$HASHTAG_ALPHANUMERIC*)" .
             # close main capture
             ")" .
-            # hashtag boundary condition
+            # hashtag boundary condition (zero-width)
             "(?=$HASHTAG_BOUNDARY)",
   ;
 
 # grouptag
 pattern
   name   => [ qw(microsyntax grouptag) ],
-  create => "(?<![0-9A-Za-z&\/])(?k:(?k:!)(?k:[a-z0-9]+))",
+  create => # hashtag boundary condition
+            $HASHTAG_BOUNDARY .
+            # open main capture
+            "(" .
+            # exclamation sigil (keep)
+            "(?k:[$EXCLAMATION_SIGNS])" .
+            # grouptag (keep)
+            # TODO: check what chars status.net allows in grouptags
+            "(?k:$HASHTAG_ALPHANUMERIC*$HASHTAG_ALPHA$HASHTAG_ALPHANUMERIC*)" .
+#           "(?k:[a-z0-9]+)" .
+            # close main capture
+            ")" .
+            # hashtag boundary condition (zero-width)
+            "(?=$HASHTAG_BOUNDARY)",
   ;
 
 1;
