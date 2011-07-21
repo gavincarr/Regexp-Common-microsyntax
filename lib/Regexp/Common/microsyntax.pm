@@ -135,8 +135,7 @@ __END__
 
 =head1 NAME
 
-Regexp::Common::microsyntax - a collection of regular expressions for
-use with microblogging-style text (tweets, dents, microposts, etc.)
+Regexp::Common::microsyntax - a collection of regular expressions for use with microblogging-style text (tweets, dents, microposts, etc.)
 
 =head1 VERSION
 
@@ -203,7 +202,7 @@ TODO: not yet implemented.
 
 =head1 AUTHOR
 
-Gavin Carr, C<< <gavin at openfusion.com.au> >>
+Gavin Carr <gavin@openfusion.com.au>
 
 =head1 BUGS
 
@@ -222,7 +221,7 @@ L<Regexp::Common>, L<Text::Microsyntax>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 Gavin Carr.
+Copyright 2011 Gavin Carr <gavin@openfusion.com.au>.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

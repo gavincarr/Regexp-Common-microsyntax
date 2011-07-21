@@ -1,7 +1,7 @@
 ---
-abstract: 'a collection of regular expressions for'
+abstract: 'a collection of regular expressions for use with microblogging-style text (tweets, dents, microposts, etc.)'
 author:
-  - 'Gavin Carr, C<< <gavin at openfusion.com.au> >>'
+  - 'Gavin Carr <gavin@openfusion.com.au>'
   - 'Gavin Carr <gavin@openfusion.com.au>'
 build_requires:
   Encode: 0
