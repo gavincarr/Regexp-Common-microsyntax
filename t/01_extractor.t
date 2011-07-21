@@ -5,6 +5,7 @@ use Test::More;
 use Test::Deep;
 use YAML qw(LoadFile Dump);
 use Encode qw(encode decode);
+use utf8;
 
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
@@ -32,14 +33,15 @@ ok(ref $hashtag_tests eq 'ARRAY' && @$hashtag_tests > 0,
 #print encode('UTF-8', $RE{microsyntax}{hashtag}) . "\n";
 my $c = 4;
 for my $t (@$hashtag_tests) {
-  my @got = ();
-  while ($t->{text} =~ m/$RE{microsyntax}{hashtag}/go) {
-#   my $got = substr($1, 1);
-    my $got = substr("$1", 1);  # TODO: why does this fail if $1 is unquoted?!
-#   print "got2: " . encode('UTF-8', $got) . "\n";
-    push @got, $got;
+  my (@got, @got2);
+  while ($t->{text} =~ m/$RE{microsyntax}{hashtag}{-keep => 1}/go) {
+#   push @got, substr($1, 1);
+    push @got, substr("$1", 1); # TODO: why does this fail if $1 is unquoted?!
+    push @got2, $3;
+    like($2, qr/^[#＃]$/, '$2 is a hash');
   }
-  cmp_deeply(\@got, $t->{expected}, $t->{description});
+  cmp_deeply(\@got,  $t->{expected}, "$t->{description} via \$1");
+  cmp_deeply(\@got2, $t->{expected}, "$t->{description} via \$3");
 
   last if $count and ++$c >= $count;
 }

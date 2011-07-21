@@ -66,8 +66,7 @@ my $CJ_HASHTAG_CHARS = join '', map { pack 'U*', $_ }
   0x2F800 .. 0x2FA1F,   # Kanji (CJK supplement)
   ;
 
-my $HASHTAG_BOUNDARY = qr/(?:\A|\z|$REGEXEN{spaces}|「|」|。|\.|!)/;
-
+my $HASHTAG_BOUNDARY     = qr/(?:\A|\z|$REGEXEN{spaces}|「|」|。|\.|!)/;
 my $HASHTAG_ALPHA        = "[a-zA-Z_$LATIN_ACCENTS$NON_LATIN_HASHTAG_CHARS$CJ_HASHTAG_CHARS]";
 my $HASHTAG_ALPHANUMERIC = "[a-zA-Z0-9_$LATIN_ACCENTS$NON_LATIN_HASHTAG_CHARS$CJ_HASHTAG_CHARS]";
 
@@ -77,7 +76,7 @@ my $HASHTAG_ALPHANUMERIC = "[a-zA-Z0-9_$LATIN_ACCENTS$NON_LATIN_HASHTAG_CHARS$CJ
 # hashtag
 pattern
   name => [ qw(microsyntax hashtag) ],
-  create => "$HASHTAG_BOUNDARY((#|＃)($HASHTAG_ALPHANUMERIC*$HASHTAG_ALPHA$HASHTAG_ALPHANUMERIC*))$HASHTAG_BOUNDARY",
+  create => "$HASHTAG_BOUNDARY((?k:#|＃)(?k:$HASHTAG_ALPHANUMERIC*$HASHTAG_ALPHA$HASHTAG_ALPHANUMERIC*))$HASHTAG_BOUNDARY",
   ;
 
 # grouptag

@@ -6,8 +6,11 @@ author   q{Gavin Carr <gavin@openfusion.com.au>};
 license  'perl';
 
 build_requires 'Test::More' >= 0.88;
+build_requires 'Test::Deep';
+build_requires 'Encode';
 
 requires 'Regexp::Common';
+requires 'utf8';
 
 auto_install;
 
