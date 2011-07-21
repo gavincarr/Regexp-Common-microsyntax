@@ -49,14 +49,23 @@ push @$hashtag_tests, @extra_tests;
 my $c = 4;
 for my $t (@$hashtag_tests) {
   my (@got, @got2);
+
+  # Test elements
+  my $sigil = '';
   while ($t->{text} =~ m/$RE{microsyntax}{hashtag}{-keep => 1}/go) {
 #   push @got, substr($1, 1);
     push @got, substr("$1", 1); # TODO: why does this fail if $1 is unquoted?!
     push @got2, $3;
     like($2, qr/^[#＃]$/, '$2 is a hash');
+    $sigil = $2;
   }
   cmp_deeply(\@got,  $t->{expected}, "$t->{description} via \$1");
   cmp_deeply(\@got2, $t->{expected}, "$t->{description} via \$3");
+
+  # Test one-shot (no keep)
+  @got = ($t->{text} =~ m/$RE{microsyntax}{hashtag}/g);
+  cmp_deeply(\@got,  [ map { "$sigil$_" } @{$t->{expected}} ],
+    "$t->{description} (no keep)");
 
   last if $count and ++$c >= $count;
 }

@@ -148,35 +148,34 @@ Version 0.01
 
     use Regexp::Common qw(microsyntax);
 
-    @users      = $RE{microsyntax}{user}->matches($text);
+    # Available patterns: users, hashtag, grouptag
 
-    @hashtags   = $RE{microsyntax}{hashtag}->matches($text);
+    # Get all users mentioned in the given post (@user1 @user2 etc)
+    @users = ($post =~ m/$RE{microsyntax}{user}/g);
 
-    @slashtags  = $RE{microsyntax}{slashtag}->matches($text);
+    @hashtags = $post =~ m/$RE{microsyntax}{hashtag}/g;
 
-    @groups     = $RE{microsyntax}{grouptag}->matches($text);
+    @groups = $post =~ m/$RE{microsyntax}{grouptag}/g;
 
 
 =head1 DESCRIPTION
 
-Please consult the manual of Regexp::Common for a general description of the works of
-this interface.
+Please consult the manual of Regexp::Common for a general description of
+the works of this interface.
 
 Do not use this module directly, but load it via Regexp::Common.
 
 This module provides regular expressions for matching microblogging-style
 text (tweets, dents, microposts, etc.). It is based on the ruby
 B<twitter-text> Regex class, with extensions to support features that
-Twitter doesn't support (like status.net !group tags, Buzz-style
-@username@domain usernames, microsyntax.org slashtags, etc.).
+Twitter doesn't support (like status.net !group tags, microsyntax.org
+slashtags, etc.).
 
 =over 4
 
 =item $RE{microsyntax}{user}
 
 =item $RE{microsyntax}{hashtag}
-
-=item $RE{microsyntax}{slashtag}
 
 =item $RE{microsyntax}{grouptag}
 

@@ -34,6 +34,8 @@ ok(ref $user_tests eq 'ARRAY' && @$user_tests > 0,
 my $c = 4;
 for my $t (@$user_tests) {
   my (@got, @got2);
+
+  # Test elements
   while ($t->{text} =~ m/$RE{microsyntax}{user}{-keep => 1}/go) {
     push @got, substr($1, 1);
     push @got2, $3;
@@ -41,6 +43,11 @@ for my $t (@$user_tests) {
   }
   cmp_deeply(\@got,  $t->{expected}, "$t->{description} via \$1");
   cmp_deeply(\@got2, $t->{expected}, "$t->{description} via \$3");
+
+  # Test one-shot (no keep)
+  @got = ($t->{text} =~ m/$RE{microsyntax}{user}/g);
+  cmp_deeply(\@got,  [ map { "\@$_" } @{$t->{expected}} ],
+    "$t->{description} (no keep)");
 
   last if $count and ++$c >= $count;
 }

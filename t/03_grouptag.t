@@ -54,14 +54,20 @@ for my $t (@$hashtag_tests) {
   $t->{text} =~ s/[#＃]/!/g;
   $t->{description} =~ s/hash/group/g;
 
+  # Test elements
   while ($t->{text} =~ m/$RE{microsyntax}{grouptag}{-keep => 1}/go) {
 #   push @got, substr($1, 1);
     push @got, substr("$1", 1); # TODO: why does this fail if $1 is unquoted?!
     push @got2, $3;
-#   is($2, '!', '$2 is an exclamation');
+    is($2, '!', '$2 is an exclamation');
   }
   cmp_deeply(\@got,  $t->{expected}, "$t->{description} via \$1");
-# cmp_deeply(\@got2, $t->{expected}, "$t->{description} via \$3");
+  cmp_deeply(\@got2, $t->{expected}, "$t->{description} via \$3");
+
+  # Test one-shot (no keep)
+  @got = ($t->{text} =~ m/$RE{microsyntax}{grouptag}/g);
+  cmp_deeply(\@got,  [ map { "!$_" } @{$t->{expected}} ],
+    "$t->{description} (no keep)");
 
   last if $count and ++$c >= $count;
 }
