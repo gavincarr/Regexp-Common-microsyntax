@@ -106,7 +106,7 @@ pattern
             # close main capture
             ")" .
             # hashtag boundary condition
-            $HASHTAG_BOUNDARY,
+            "(?=$HASHTAG_BOUNDARY)",
   ;
 
 # grouptag

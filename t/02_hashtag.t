@@ -11,6 +11,19 @@ use FindBin qw($Bin);
 use lib "$Bin/../lib";
 use Regexp::Common qw(microsyntax);
 
+my @extra_tests = (
+  {
+    text        => 'post with #multiple #hashtags in middle',
+    expected    => [ qw(multiple hashtags) ],
+    description => 'Multiple hashtags in middle',
+  },
+  {
+    text        => 'post ending with #multiple #hashtags',
+    expected    => [ qw(multiple hashtags) ],
+    description => 'Multiple hashtags at end',
+  },
+);
+
 my $count = shift @ARGV;
 
 # Mark Test::More's output fh's as utf8
@@ -29,6 +42,8 @@ ok($hashtag_tests = $tests->{hashtags},
   'hashtag tests found');
 ok(ref $hashtag_tests eq 'ARRAY' && @$hashtag_tests > 0,
   'number of hashtag tests > 0: ' . scalar @$hashtag_tests);
+
+push @$hashtag_tests, @extra_tests;
 
 #print encode('UTF-8', $RE{microsyntax}{hashtag}) . "\n";
 my $c = 4;
