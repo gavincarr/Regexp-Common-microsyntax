@@ -12,6 +12,9 @@ our $VERSION = '0.01';
 
 my %REGEXEN = ();
 
+my $AT_SIGNS = '@＠';
+my $HASH_SIGNS = '#＃';
+
 my $UNICODE_SPACES = join '|', map { pack 'U*', $_ }
   0x0009 .. 0x000D, # White_Space # Cc   [5] <control-0009>..<control-000D>
   0x0020,           # White_Space # Zs       SPACE
@@ -48,8 +51,6 @@ my $NON_LATIN_HASHTAG_CHARS = join '', map { pack 'U*', $_ }
   0xAC00 .. 0xD7AF,     # Hangul Syllables
   0xD7B0 .. 0xD7FF      # Hangul Jamo Extended-B
   ;
-use Encode;
-#print encode('UTF-8', $NON_LATIN_HASHTAG_CHARS) . "\n";
 
 my $CJ_HASHTAG_CHARS = join '', map { pack 'U*', $_ }
   0x30A1 .. 0x30FA,     # Katakana (full-width)
@@ -73,15 +74,44 @@ my $HASHTAG_ALPHANUMERIC = "[a-zA-Z0-9_$LATIN_ACCENTS$NON_LATIN_HASHTAG_CHARS$CJ
 # -------------------------------------------------------------------------
 # Pattern definitions
 
+# user
+#           "(/[a-zA-Z][a-zA-Z0-9_-]{0,24})?)" .
+pattern
+  name   => [ qw(microsyntax user) ],
+            # @user must be at beginning of string, or not after a word char
+  create => "(?:^|[^a-zA-Z0-9_]|RT:?)" .
+            # open main capture
+            "(" .
+            # at sigil (keep)
+            "(?k:[$AT_SIGNS])" .
+            # username (keep)
+            "(?k:[a-zA-Z0-9_]{1,20})" .
+            # close main capture
+            ")" .
+            # @user must be at end of string, or not followed by a word char or at
+            "(?=\$|[^a-zA-Z0-9_$AT_SIGNS$LATIN_ACCENTS])",
+  ;
+
 # hashtag
 pattern
-  name => [ qw(microsyntax hashtag) ],
-  create => "$HASHTAG_BOUNDARY((?k:#|＃)(?k:$HASHTAG_ALPHANUMERIC*$HASHTAG_ALPHA$HASHTAG_ALPHANUMERIC*))$HASHTAG_BOUNDARY",
+  name   => [ qw(microsyntax hashtag) ],
+  create => # hashtag boundary condition
+            $HASHTAG_BOUNDARY . 
+            # open main capture
+            "(" .
+            # hash sigil (keep)
+            "(?k:[$HASH_SIGNS])" .
+            # hashtag (keep)
+            "(?k:$HASHTAG_ALPHANUMERIC*$HASHTAG_ALPHA$HASHTAG_ALPHANUMERIC*)" .
+            # close main capture
+            ")" .
+            # hashtag boundary condition
+            $HASHTAG_BOUNDARY,
   ;
 
 # grouptag
 pattern
-  name => [ qw(microsyntax grouptag) ],
+  name   => [ qw(microsyntax grouptag) ],
   create => "(?<![0-9A-Za-z&\/])(?k:(?k:!)(?k:[a-z0-9]+))",
   ;
 
@@ -148,7 +178,7 @@ Gavin Carr, C<< <gavin at openfusion.com.au> >>
 
 Please report any bugs or feature requests to
 C<bug-regexp-common-microsyntax at rt.cpan.org>, or through the web
-interface at 
+interface at
 L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Regexp-Common-microsyntax>.
 
 =head1 ACKNOWLEDGEMENTS

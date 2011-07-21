@@ -1,4 +1,4 @@
-# Test with twitter-text-conformance extractor test data
+# Test with twitter-text-conformance hashtag test data
 
 use strict;
 use Test::More;
