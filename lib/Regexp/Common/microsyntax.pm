@@ -168,13 +168,22 @@ Version 0.01
 
     use Regexp::Common qw(microsyntax);
 
-    # Available patterns: users, hashtag, grouptag, slashtag
+    # Available patterns: user, hashtag, grouptag, slashtag
 
-    # Get all users/hashtags/groups mentioned in $post
+    # Get all users/hashtags/groups/slashtags mentioned in $post
     @users     = $post =~ m/$RE{microsyntax}{user}/og;
     @hashtags  = $post =~ m/$RE{microsyntax}{hashtag}/og;
     @groups    = $post =~ m/$RE{microsyntax}{grouptag}/og;
     @slashtags = $post =~ m/$RE{microsyntax}{slashtag}/og;
+
+    # Capture/extract individual elements (see Regexp::Common '-keep')
+    my @usernames;
+    while ($post =~ m/$RE{microsyntax}{user}{-keep => 1 }/go) {
+      push @usernames, $3;
+    }
+
+    # Substitute/markup individual elements
+    $post =~ s|$RE{microsyntax}{user}|<span class="user">$1</span>|go;
 
 
 =head1 DESCRIPTION
