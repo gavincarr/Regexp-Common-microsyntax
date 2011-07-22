@@ -72,6 +72,8 @@ my $HASHTAG_BOUNDARY     = qr/(?:\A|\z|$REGEXEN{spaces}|「|」|。|\.|!)/;
 my $HASHTAG_ALPHA        = "[a-zA-Z_$LATIN_ACCENTS$NON_LATIN_HASHTAG_CHARS$CJ_HASHTAG_CHARS]";
 my $HASHTAG_ALPHANUMERIC = "[a-zA-Z0-9_$LATIN_ACCENTS$NON_LATIN_HASHTAG_CHARS$CJ_HASHTAG_CHARS]";
 
+my $SLASHTAGS = qr/(?:by|cc|for|tip|thx|hat tip|ht|via)/i;
+
 # -------------------------------------------------------------------------
 # Pattern definitions
 
@@ -79,8 +81,8 @@ my $HASHTAG_ALPHANUMERIC = "[a-zA-Z0-9_$LATIN_ACCENTS$NON_LATIN_HASHTAG_CHARS$CJ
 #           "(/[a-zA-Z][a-zA-Z0-9_-]{0,24})?)" .
 pattern
   name   => [ qw(microsyntax user) ],
-            # @user must be at beginning of string, or not after a word char
-  create => "(?:^|[^a-zA-Z0-9_]|RT:?)" .
+  create => # @user must be at beginning of string, or not after a word char
+            "(?:^|[^a-zA-Z0-9_]|RT:?)" .
             # open main capture
             "(" .
             # at sigil (keep)
@@ -129,6 +131,24 @@ pattern
             "(?=$HASHTAG_BOUNDARY)",
   ;
 
+# slashtag
+pattern
+  name   => [ qw(microsyntax slashtag) ],
+  create => # slashtag must be at beginning of string, or not after a word char
+#           "(?:^|[^a-zA-Z0-9_])" .
+            # open main capture
+            "(" .
+            # slashtag (keep)
+            "(?k:/?$SLASHTAGS)$REGEXEN{spaces}" .
+            # @user (keep)
+            "(?k:[$AT_SIGNS][a-zA-Z0-9_]{1,20}" .
+            "(?:$REGEXEN{spaces}+[$AT_SIGNS][a-zA-Z0-9_]{1,20})*)" .
+            # close main capture
+            ")" .
+            # @user must be at end of string, or not followed by a word char or at
+            "(?=\$|[^a-zA-Z0-9_$AT_SIGNS$LATIN_ACCENTS])",
+  ;
+
 1;
 
 __END__
@@ -150,9 +170,10 @@ Version 0.01
     # Available patterns: users, hashtag, grouptag, slashtag
 
     # Get all users/hashtags/groups mentioned in $post
-    @users    = $post =~ m/$RE{microsyntax}{user}/og;
-    @hashtags = $post =~ m/$RE{microsyntax}{hashtag}/og;
-    @groups   = $post =~ m/$RE{microsyntax}{grouptag}/og;
+    @users     = $post =~ m/$RE{microsyntax}{user}/og;
+    @hashtags  = $post =~ m/$RE{microsyntax}{hashtag}/og;
+    @groups    = $post =~ m/$RE{microsyntax}{grouptag}/og;
+    @slashtags = $post =~ m/$RE{microsyntax}{slashtag}/og;
 
 
 =head1 DESCRIPTION
@@ -171,7 +192,7 @@ slashtags, etc.).
 =head2 $RE{microsyntax}{user}
 
 Returns a pattern that matches @username handles. For this pattern and
-the next four, using '-keep' (see L<Regexp::Common>) allows access to
+the next three, using '-keep' (see L<Regexp::Common>) allows access to
 the following individual components:
 
 =over 4
@@ -196,9 +217,37 @@ Returns a pattern that matches identica/status.net !group tags.
 =head2 $RE{microsyntax}{slashtag}
 
 Returns a pattern that matches slashtags, as defined and documented at
-http://microsyntax.org/.
+http://microsyntax.org/. These normally occur at the end of a post, with
+the first (but typically not the others) introduced by a slash e.g.
 
-TODO: not yet implemented.
+  Sample post /via @person1 by @person2 cc @person3 @person4
+
+The following slashtags are recognised:
+
+=over 4
+
+=item by
+
+=item cc, for, and tip
+
+=item thx
+
+=item hat tip, ht, and via
+
+=back
+
+For this pattern, using '-keep' allows access to the following individual
+components:
+
+=over 4
+
+=item $1  captures the entire match
+
+=item $2  captures the verbatim slashtag (e.g. '/via', 'cc', 'by')
+
+=item $3  captures the (potentially multiple) @user handles with this slashtag
+
+=back
 
 =head1 AUTHOR
 
