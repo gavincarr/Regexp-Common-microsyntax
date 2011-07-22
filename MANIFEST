@@ -21,7 +21,6 @@ t/01_user.t
 t/02_hashtag.t
 t/03_grouptag.t
 t/04_slashtag.t
-t/boilerplate.t
 t/manifest.t
 t/pod-coverage.t
 t/pod.t
