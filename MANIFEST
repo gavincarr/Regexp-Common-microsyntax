@@ -30,7 +30,6 @@ t/twitter-text-conformance/extract.yml
 t/twitter-text-conformance/extract_real.yml
 t/twitter-text-conformance/hit_highlighting.yml
 t/twitter-text-conformance/LICENSE
-t/twitter-text-conformance/pull
 t/twitter-text-conformance/README
 t/twitter-text-conformance/README.md
 t/twitter-text-conformance/validate.yml
