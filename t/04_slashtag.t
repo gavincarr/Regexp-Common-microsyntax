@@ -1,4 +1,4 @@
-# Test with twitter-text-conformance user test data
+# slashtag tests
 
 use strict;
 use Test::More;
@@ -13,22 +13,22 @@ use Regexp::Common qw(microsyntax);
 my @tests = (
   {
     description => 'Single slashtag, at end',
-    text        => 'Slashtag post. /via @person1',
+    text        => 'Slashtag post /via @person1',
     expected    => [ '/via @person1' ],
   },
   {
     description => 'Single slashtag, not at end',
-    text        => 'Slashtag post. /via @person1 #foobar',
+    text        => 'Slashtag post /via @person1 #foobar',
     expected    => [ '/via @person1' ],
   },
   {
     description => 'Multiple slashtags at end',
-    text        => 'Slashtag post. /via @person1 by @person2 cc @person3',
+    text        => 'Slashtag post /via @person1 by @person2 cc @person3',
     expected    => [ '/via @person1', 'by @person2', 'cc @person3' ],
   },
   {
     description => 'Multiple slashtags, multiple user slashtag',
-    text        => 'Slashtag post. /via @person1 by @person2 cc @person3 @person4',
+    text        => 'Slashtag post /via @person1 by @person2 cc @person3 @person4',
     expected    => [ '/via @person1', 'by @person2', 'cc @person3 @person4' ],
   },
   {

@@ -68,7 +68,8 @@ my $CJ_HASHTAG_CHARS = join '', map { pack 'U*', $_ }
   0x2F800 .. 0x2FA1F,   # Kanji (CJK supplement)
   ;
 
-my $HASHTAG_BOUNDARY     = qr/(?:\A|\z|$REGEXEN{spaces}|「|」|。|\.|!)/;
+my $HASHTAG_BOUNDARY1    = qr/(?:\A|(?<=$REGEXEN{spaces}|「|」|。|\.|!))/;
+my $HASHTAG_BOUNDARY2    = qr/(?:\z|$REGEXEN{spaces}|「|」|。|\.|!)/;
 my $HASHTAG_ALPHA        = "[a-zA-Z_$LATIN_ACCENTS$NON_LATIN_HASHTAG_CHARS$CJ_HASHTAG_CHARS]";
 my $HASHTAG_ALPHANUMERIC = "[a-zA-Z0-9_$LATIN_ACCENTS$NON_LATIN_HASHTAG_CHARS$CJ_HASHTAG_CHARS]";
 
@@ -82,7 +83,7 @@ my $SLASHTAGS = qr/(?:by|cc|for|tip|thx|hat tip|ht|via)/i;
 pattern
   name   => [ qw(microsyntax user) ],
   create => # @user must be at beginning of string, or not after a word char
-            "(?:^|[^a-zA-Z0-9_]|RT:?)" .
+            "(?:^|(?<![a-zA-Z0-9_]))" .
             # open main capture
             "(" .
             # at sigil (keep)
@@ -99,7 +100,7 @@ pattern
 pattern
   name   => [ qw(microsyntax hashtag) ],
   create => # hashtag boundary condition
-            $HASHTAG_BOUNDARY . 
+            $HASHTAG_BOUNDARY1 . 
             # open main capture
             "(" .
             # hash sigil (keep)
@@ -109,14 +110,14 @@ pattern
             # close main capture
             ")" .
             # hashtag boundary condition (zero-width)
-            "(?=$HASHTAG_BOUNDARY)",
+            "(?=$HASHTAG_BOUNDARY2)",
   ;
 
 # grouptag
 pattern
   name   => [ qw(microsyntax grouptag) ],
   create => # hashtag boundary condition
-            $HASHTAG_BOUNDARY .
+            $HASHTAG_BOUNDARY1 .
             # open main capture
             "(" .
             # exclamation sigil (keep)
@@ -128,14 +129,14 @@ pattern
             # close main capture
             ")" .
             # hashtag boundary condition (zero-width)
-            "(?=$HASHTAG_BOUNDARY)",
+            "(?=$HASHTAG_BOUNDARY2)",
   ;
 
 # slashtag
 pattern
   name   => [ qw(microsyntax slashtag) ],
   create => # slashtag must be at beginning of string, or not after a word char
-#           "(?:^|[^a-zA-Z0-9_])" .
+#           "(?:^|(?<![a-zA-Z0-9_]))" .
             # open main capture
             "(" .
             # slashtag (keep)

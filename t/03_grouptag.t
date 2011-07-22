@@ -1,4 +1,4 @@
-# Test with twitter-text-conformance hashtag test data
+# Test with twitter-text-conformance hashtag test data (munged for groups)
 
 use strict;
 use Test::More;
