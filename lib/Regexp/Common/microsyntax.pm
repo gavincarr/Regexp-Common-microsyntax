@@ -276,7 +276,7 @@ The Ruby C<twitter-text-rb> library, L<http://github.com/mzsanford/twitter-text-
 
 =head1 SEE ALSO
 
-L<Regexp::Common>, L<Text::Microsyntax>
+L<Regexp::Common>
 
 =head1 LICENSE AND COPYRIGHT
 
