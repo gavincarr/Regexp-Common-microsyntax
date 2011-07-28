@@ -5,7 +5,7 @@ use warnings;
 use utf8;
 use Regexp::Common qw(pattern);
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 # -------------------------------------------------------------------------
 # Helper sets and regexes
@@ -160,7 +160,7 @@ Regexp::Common::microsyntax - a collection of regular expressions for use with m
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
 
