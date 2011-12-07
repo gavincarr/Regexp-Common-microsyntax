@@ -1,0 +1,10 @@
+---
+- description: bracketed usernames
+  text: 'May we present Adam Lisagor (@lonelysandwich) in conversation with Merlin Mann (@hotdogsladies) - http://t.co/Cwse3c5m #webstock'
+  expected: ['lonelysandwich', 'hotdogsladies']
+- description: "leading ."
+  text: ".@user foobar"
+  expected: ['user']
+- description: apostrophied user
+  text: "@bkuhn After @fontana's goading,I blogged on !Conservancy's site about the hullabaloo over non-profits' role in #FaiF Software"
+  expected: ['bkuhn', 'fontana']
